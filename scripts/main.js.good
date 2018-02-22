@@ -1,0 +1,256 @@
+"use strict"
+
+
+let grid = new Grid(50, 50);
+initCells(grid);
+	
+function initCells(grid) {
+	let w = grid.getWidth();
+	let h = grid.getHeight();
+	
+	let centerContent = document.getElementById("centerContent");
+	
+   // for (var n = 0; n < playlist.items.length; n++) {
+	for (var n = 0; n < w; n++) {
+		var row = document.createElement("div");
+		
+		for (var m = 0; m < h; m++) {
+			var cell = document.createElement("span");
+			cell.setAttribute("class", "cell");
+			
+			row.appendChild(cell);
+			grid.cellAt(n, m).element = cell;
+			
+			cell.gridCell = grid.cellAt(n, m);
+			
+			
+			cell.addEventListener("touchstart", onClickCell);
+			cell.addEventListener("touchmove", onTouchMove);
+			cell.addEventListener("touchend", onTouchEnd);
+			
+		}
+		centerContent.appendChild(row);
+	}
+	
+
+	
+	centerContent.classList.remove("hide");
+	
+	document.getElementById("tick_bttn").addEventListener("click", onTick);
+}
+
+
+/**********************************
+ * User event callbacks           *
+ **********************************/
+ 
+
+function onClickCell(event) {
+	
+//	if (this.classList.contains("shaded")){
+//		this.classList.remove("shaded");
+//	}else{
+//	var e = event;//.originalEvent.changedTouches[0];
+	//var c = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+	this.classList.add("shaded");
+	this.gridCell.setState(1);
+//	}
+
+
+}
+
+function onTouchMove(event) {
+	var c = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+	if(c.classList.contains("cell")){
+		c.classList.add("shaded");
+		c.gridCell.setState(1);
+	}
+}
+
+function onTouchEnd(event) {
+	let d = document.getElementById("debugoutput");
+	d.innerHTML = grid.outputTable();
+}
+
+
+function onTick(event) {
+	grid.tick();
+	
+	for(let i = 0; i < grid.rows.length;i++) {
+		for(let j = 0; j < grid.rows[i].cells.length; j++) {
+			let c = grid.rows[i].cells[j];
+			
+			if(c.state === 1){
+				c.element.classList.add("shaded");
+			}else{
+				c.element.classList.remove("shaded");
+			}
+		}
+	}	
+	
+	
+	
+}
+
+/**********************************
+ * grid object definitions        *
+ **********************************/
+ 
+function Cell(parentRow){
+	this.row = parentRow;
+	this.element = undefined;
+	this.state = 0;
+	this.newState = 0;
+	
+	this.getIndex = function() {
+		return this.row.cells.indexOf(this);
+	};
+	
+	this.getLocation = function() {
+		return {
+			"row" : this.cell.row.getIndex(),
+			"cell" : this.cell.getIndex()
+		};
+	};
+	
+	this.setState = function(s) {
+		this.state = s;
+	};
+	
+	this.getState = function() {
+		return this.state;
+	};
+	
+	this.tick = function() {
+		let parentGrid = this.row.parentGrid;
+		let myRowIndex = this.row.getIndex();
+		let myCellIndex = this.getIndex();
+		
+		//work out bounds of indices of our neighbouring cells
+		let leftIndex = myCellIndex - 1;
+		let rightIndex = myCellIndex + 1;
+		if(leftIndex < 0)leftIndex = 0;
+		if(rightIndex >= this.row.cells.length)rightIndex = myCellIndex; //i must be at the end of the row
+		
+		let topIndex = myRowIndex - 1;
+		let bottomIndex = myRowIndex + 1;
+		if(topIndex < 0)topIndex = 0;
+		if(bottomIndex >= this.row.parentGrid.getHeight())bottomIndex = myRowIndex;
+		
+		//count live neighbours
+		let live = 0;
+		for(let i = topIndex; i <= bottomIndex; i++){
+			for(let j = leftIndex; j <= rightIndex; j++) {
+				
+				let c = parentGrid.cellAt(i, j);
+				live = live + c.state;
+			}
+		}
+		if(this.state === 1)live--;
+		
+		if(this.state === 1){
+			switch(live){
+				case 0:
+				case 1:
+					this.newState = 0;
+					break;
+				case 2:
+				case 3:
+					this.newState = 1;	//Ah ah ah stayin' alive, stayin' alive
+					break;
+				default:
+					this.newState = 0;
+			}
+		}else{
+			if(live === 3)this.newState = 1;
+		}
+	};
+	
+	this.updateState = function() {
+		this.state = this.newState;
+	};
+	
+	
+}
+
+function Row(grid){
+	this.parentGrid = grid;
+	this.cells = [];
+	
+	this.getIndex = function() {
+		return this.parentGrid.rows.indexOf(this);
+	};
+	
+	this.addCell = function() {
+		let c = new Cell(this);
+		this.cells.push(c);
+		return c;
+	}
+}
+
+function Grid(width, height){
+	this.rows = [];
+	
+	this.cellAt = function(row, cell){
+		let r = this.rows[row];
+		let c = r.cells[cell];
+		return c;
+	};
+	
+	this.addRow = function() {
+		let r = new Row(this);
+		this.rows.push(r);
+		return r;
+	};
+	
+	this.getWidth = function() {
+		return this.rows[0].cells.length;
+	};
+	
+	this.getHeight = function(){
+		return this.rows.length;
+	};
+	
+	this.outputTable = function() {
+		let outp="<table>";
+
+		for(let i = 0; i < this.rows.length;i++) {
+			outp += "<tr>";
+			for(let j = 0; j < this.rows[i].cells.length; j++) {
+				outp += "<td>";
+				outp += this.rows[i].cells[j].state;
+				outp += "</td>";
+			}
+			outp += "</tr>";
+		}
+		return outp;
+	};
+	
+	this.tick = function() {
+		for(let i = 0; i < this.rows.length;i++) {
+			for(let j = 0; j < this.rows[i].cells.length; j++) {
+				this.rows[i].cells[j].tick();
+			}
+		}
+		
+		for(let i = 0; i < this.rows.length;i++) {
+			for(let j = 0; j < this.rows[i].cells.length; j++) {
+				this.rows[i].cells[j].updateState();
+			}
+		}	
+	};
+	
+	
+	
+	
+	
+	for(let i = 0; i < height; i++){
+		let r = this.addRow();
+		for(let j = 0; j < width; j++){
+			r.addCell();
+		}
+	}
+}
+	
+
+

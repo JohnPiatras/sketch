@@ -1,0 +1,98 @@
+@import url("reset.css");
+
+@font-face {
+    font-family: 'ComicSansMS';
+    src:url('../fonts/comic.ttf');
+}
+
+body{
+	background-color:white;
+    font-family: "Comic Sans MS", ComicSansMS, sans-serif;
+
+}
+
+#centerContent {
+	width: 100%;
+	min-width:260px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align:center;
+
+}
+
+#tick_bttn {
+	width:150px;
+	margin-top:10px;
+	margin-left:auto;
+	margin-right:auto;
+	height:80px;
+	text-align:center;
+	display:block;
+}
+
+
+#top {
+	padding-top:25px;
+	padding-bottom:25px;
+}
+
+
+
+#top h1 {
+	width:80%;
+	margin:auto;
+	text-align:center;
+	font-size: 8vw;
+	color: purple;
+	text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+#fullscreenButton {
+	position:absolute;
+	background-color:grey;
+	border: 5px solid black;
+	border-radius: 8px;
+	box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, 0.5);
+	width:32px;
+	height:32px;
+	right:5px;
+	top:5px;
+	
+}
+
+.hide {
+	display: none;
+}
+
+
+.cell {
+	display:inline-block;
+	width:1%;
+	border: 1px solid black;
+}
+
+.cell:after {
+    content: "";
+    display:block;
+    padding-bottom:100%;
+}
+
+.shaded {
+	background-color: grey;
+}
+
+
+
+
+/***********************************
+ *                                 *
+ *      Animations                 *
+ *                                 *
+ ***********************************/
+
+.
+
+@media only screen and (max-device-width: 420px) {
+    
+}
+
