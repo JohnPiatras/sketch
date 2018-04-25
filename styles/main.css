@@ -11,16 +11,7 @@ body{
 
 }
 
-#centerContent {
-	width: 100%;
-	min-width:260px;
-	margin-left: auto;
-	margin-right: auto;
-	text-align:center;
-
-}
-
-#tick_bttn {
+#start_bttn {
 	width:150px;
 	margin-top:10px;
 	margin-left:auto;
@@ -64,33 +55,34 @@ body{
 	display: none;
 }
 
+.grid-border-style{
+	border:1px solid black;
+}
+
+#grid{
+	display:grid;
+	width: 50vw;
+	height:50vw;
+	margin-left: auto;
+	margin-right: auto;
+	text-align:center;
+
+	border-right:0;
+	border-bottom:0;
+}
+
 
 .cell {
-	display:inline-block;
-	width:1%;
-	border: 1px solid black;
+	border-left:0;
+	border-top:0;
 }
 
-.cell:after {
-    content: "";
-    display:block;
-    padding-bottom:100%;
-}
 
 .shaded {
 	background-color: grey;
 }
 
 
-
-
-/***********************************
- *                                 *
- *      Animations                 *
- *                                 *
- ***********************************/
-
-.
 
 @media only screen and (max-device-width: 420px) {
     

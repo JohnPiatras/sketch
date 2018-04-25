@@ -24,52 +24,48 @@ updateHTMLCells(grid);	- updates html page cells elements
 let mousedown = false;
 
 let timer = false;
-let grid = new Grid(50, 50);
-let game = new GameOfLife(grid);
-initHTMLCells(grid, "centerContent");
+let grid;
+let game;
 
-	
+resetPage(16, 16);
+
+function resetPage(grid_size_x, grid_size_y){
+	grid = new Grid(grid_size_x, grid_size_y);
+	game = new GameOfLife(grid);
+	initHTMLCells(grid, "grid");
+}
+
 function initHTMLCells(grid, id) {
 	let w = grid.width;
 	let h = grid.height;
-	
-	let centerContent = document.getElementById(id);
-	
-   // for (var n = 0; n < playlist.items.length; n++) {
+	let gridElement = document.getElementById(id);
+	gridElement.innerHTML="";
+
+	gridElement.setAttribute("style",`grid-template-columns:repeat(${w},1fr);grid-template-rows:repeat(${h},1fr);`)
 	for (var n = 0; n < w; n++) {
-		var row = document.createElement("div");
-		
+
 		for (var m = 0; m < h; m++) {
-			var cell = document.createElement("span");
-			cell.setAttribute("class", "cell");
-	
-			row.appendChild(cell);
-			grid.cellAt(n, m).element = cell;
+			//create html div for cell
+			var htmlcell = document.createElement("div");
+			htmlcell.setAttribute("class", "cell grid-border-style");
+			gridElement.appendChild(htmlcell);
+
+			//link our grid object and html div representing the cell
+			grid.cellAt(n, m).element = htmlcell;
+			htmlcell.gridCell = grid.cellAt(n, m);
 			
-			cell.gridCell = grid.cellAt(n, m);
-			
-			
-			cell.addEventListener("touchstart", onTouchStart);
-			cell.addEventListener("touchmove", onTouchMove);
-			cell.addEventListener("touchend", onTouchEnd);
-			
-			
-			//cell.addEventListener("click", onClickCell);
-			
-			
-		}
-		centerContent.appendChild(row);
-		
-		
-		centerContent.addEventListener("mousedown", function(e) {onMouseEvent("mousedown", e);});
-		centerContent.addEventListener("mouseup", function(e) {onMouseEvent("mouseup", e);});
-		centerContent.addEventListener("mouseover", function(e) {onMouseEvent("mouseover", e);});
+			htmlcell.addEventListener("touchstart", onTouchStart);
+			htmlcell.addEventListener("touchmove", onTouchMove);
+			htmlcell.addEventListener("touchend", onTouchEnd);	
+		}	
+		gridElement.addEventListener("mousedown", function(e) {onMouseEvent("mousedown", e);});
+		gridElement.addEventListener("mouseup", function(e) {onMouseEvent("mouseup", e);});
+		gridElement.addEventListener("mouseover", function(e) {onMouseEvent("mouseover", e);});
 		
 	}
 	
-	centerContent.classList.remove("hide");
-	
-	document.getElementById("tick_bttn").addEventListener("click", onClickStartButton);
+	gridElement.classList.remove("hide");
+	document.getElementById("start_bttn").addEventListener("click", onClickStartButton);
 }
 
 function updateHTMLCells(grid) {
