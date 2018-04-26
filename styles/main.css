@@ -57,8 +57,7 @@ body{
 	margin-right: auto;
 	text-align:center;
 	border-right:0;
-	border-bottom:0;
-	
+	border-bottom:0;	
 }
 
 
@@ -171,7 +170,102 @@ body{
 }
 
 
-@media only screen and (max-device-width: 420px) {
-    
+@media only screen and (max-device-width: 480px) and (orientation: portrait) {
+	#grid{
+		width: 80vw;
+		height:80vw;
+	}   
+
+	#top{
+		padding-top:5px;
+		padding-bottom:5px;
+	}
+
+	#top h1{
+		font-size:4vh;
+	}
+	#controls{
+		width:50vw;
+	}
+	.button{
+		padding: 3px 5px 3px 5px;
+		margin-right:5px;
+	}
+
+	#fullscreenButton{
+		width:16px;
+		height:16px;
+	}	
+	
+	#resize-dialog{
+		height:37%;
+		width:70%;
+		left:15%;
+	}
+
+	#resize-dialog h1{
+		font-size:12pt;
+	}
+
+	#resize-dialog p{
+		font-size:8pt;
+	}
+
+	#resize-dialog input{
+		font-size:8pt;
+	}
+
+	#resize-dialog button{
+		
+	}
+
+
+}
+
+@media only screen and (max-device-width: 480px) and (orientation: landscape) {
+	#grid{
+		width: 70vh;
+		height:70vh;
+	}   
+
+	#top{
+		padding-top:5px;
+		padding-bottom:5px;
+	}
+
+	#top h1{
+		font-size:4vh;
+	}
+	#controls{
+		float:left;
+		width:25%;
+
+	}
+	.button{
+		padding: 3px 5px 3px 5px;
+		margin:15px 0px 15px 0px;
+		width:100%;
+	}
+
+	#fullscreenButton{
+		width:16px;
+		height:16px;
+	}
+
+	#resize-dialog{
+		height:50%;
+	}
+
+	#resize-dialog h1{
+		font-size:12pt;
+	}
+
+	#resize-dialog p{
+		font-size:8pt;
+	}
+
+	#resize-dialog button{
+		width:100px;
+	}
 }
 
