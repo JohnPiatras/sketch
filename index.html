@@ -12,9 +12,24 @@
 		<div id="fullscreenButton"></div>
 	</div>
 
+	<div id="controls">
+		<button type="button" class="button" id = "clear_bttn">Clear</button>
+		<button type="button" class="button" id = "resize_bttn">Resize</button>
+		<button type="button" class="button" id = "start_bttn">Start</button>
+		
+	</div>
+
 	<div id="grid" class="grid-border-style"></div>
-	
-	<button type="button" id = "start_bttn">Start</button>
+
+	<div id="resize-dialog" class="dialog-box hide">
+		<h1>Enter new grid size</h1>
+		<p>The grid size can be a number between 2 and 64:
+		<input id="resize-size-input" type="number" value="16" min="2" max="64"></p>
+		<div class="dialog-bttn-container">
+			<button type="button" id="resize-cancel-bttn" class="button dialog-button">Cancel</button>
+			<button type="button" id="resize-ok-bttn" class="button dialog-button">Ok</button>
+		</div>
+	</div>
 	
     <script src="scripts/fullscreenbutton.js"></script>
     <script src="scripts/main.js"></script>

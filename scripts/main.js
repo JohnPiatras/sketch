@@ -1,4 +1,4 @@
-"use strict"
+
 /*
 Etch-a-sketch grid with Conway's Game Of Life functionality
 
@@ -21,21 +21,34 @@ updateHTMLCells(grid);	- updates html page cells elements
 
 */
 
-let mousedown = false;
+//stat of our namespace
+let etchasketch = function(){
+"use strict"
 
+let mousedown = false;
 let timer = false;
 let grid;
 let game;
+
+//references to page elements
+let start_bttn = document.getElementById("start_bttn");
+let clear_bttn = document.getElementById("clear_bttn");
+
+let resize_dialog = document.getElementById("resize-dialog");
+let resize_bttn = document.getElementById("resize_bttn");
+let resize_cancel_bttn = document.getElementById("resize-cancel-bttn");
+let resize_ok_bttn = document.getElementById("resize-ok-bttn");
+let resize_size_input = document.getElementById("resize-size-input");
 
 resetPage(16, 16);
 
 function resetPage(grid_size_x, grid_size_y){
 	grid = new Grid(grid_size_x, grid_size_y);
 	game = new GameOfLife(grid);
-	initHTMLCells(grid, "grid");
+	initHTMLGrid(grid, "grid");
 }
 
-function initHTMLCells(grid, id) {
+function initHTMLGrid(grid, id) {
 	let w = grid.width;
 	let h = grid.height;
 	let gridElement = document.getElementById(id);
@@ -65,7 +78,13 @@ function initHTMLCells(grid, id) {
 	}
 	
 	gridElement.classList.remove("hide");
-	document.getElementById("start_bttn").addEventListener("click", onClickStartButton);
+	start_bttn.addEventListener("click", onClickButton);
+	clear_bttn.addEventListener("click", onClickButton);
+	resize_bttn.addEventListener("click", onClickButton);
+	resize_cancel_bttn.addEventListener("click", onClickButton);
+	resize_ok_bttn.addEventListener("click", onClickButton);
+
+	resize_dialog.addEventListener("animationend", function(e){e.target.classList.remove("dialog-box-flash");});
 }
 
 function updateHTMLCells(grid) {
@@ -113,14 +132,68 @@ function doTick(){
 	updateHTMLCells(grid);
 }
 
-function onClickStartButton(event) {
+function startGameOfLife(){
+	start_bttn.innerHTML = "Stop";
+	timer = setInterval(doTick, 100);
+}
+
+function stopGameOfLife(){
+	start_bttn.innerHTML = "Start";
+	if(timer)clearInterval(timer);
+	timer = false;
+}
+
+function doStartButton(){
 	if(!timer){
-		this.innerHTML = "Stop";
-		timer = setInterval(doTick, 100);
+		startGameOfLife();
 	}else{
-		this.innerHTML = "Start";
-		clearInterval(timer);
-		timer = false;
+		stopGameOfLife();
+	}
+}
+
+
+function showResizeDialog(){
+	clear_bttn.disabled = true;
+	resize_bttn.disabled = true;
+	start_bttn.disabled = true;
+	stopGameOfLife();
+	resize_dialog.classList.remove("hide");
+}
+
+function hideResizeDialog(){
+	clear_bttn.disabled = false;
+	resize_bttn.disabled = false;
+	start_bttn.disabled = false;
+	resize_dialog.classList.add("hide");
+}
+
+
+
+function onClickButton(event) {
+	switch(event.target.id){
+		case "clear_bttn":
+			stopGameOfLife();
+			resetPage(grid.width, grid.height);
+			break;
+		case "resize_bttn":
+			showResizeDialog();
+			break;
+		case "start_bttn":
+			doStartButton();
+			break;
+		case "resize-cancel-bttn":
+			hideResizeDialog();
+			break;
+		case "resize-ok-bttn":
+			let new_size = Number(resize_size_input.value);
+			if(typeof(new_size) == "number" && new_size >1 && new_size < 65){
+				hideResizeDialog();
+				resetPage(new_size, new_size);
+			}else{
+				resize_dialog.classList.add("dialog-box-flash");
+			}
+
+			break;
 	}
 }
 
@@ -146,6 +219,8 @@ function onMouseEvent(eventtype, event) {
 		default:
 	}
 }
+
+
 
 
 
@@ -277,7 +352,8 @@ function GameOfLife(grid) {
 	};
 }
  
- 
+
+}();//end of our namespace
  
  
  
