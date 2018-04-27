@@ -29,6 +29,7 @@ let mousedown = false;
 let timer = false;
 let grid;
 let game;
+let color;
 
 //references to page elements
 let start_bttn = document.getElementById("start_bttn");
@@ -39,6 +40,8 @@ let resize_bttn = document.getElementById("resize_bttn");
 let resize_cancel_bttn = document.getElementById("resize-cancel-bttn");
 let resize_ok_bttn = document.getElementById("resize-ok-bttn");
 let resize_size_input = document.getElementById("resize-size-input");
+
+let color_picker = document.getElementById("colorPicker");
 
 resetPage(16, 16);
 
@@ -85,6 +88,8 @@ function initHTMLGrid(grid, id) {
 	resize_ok_bttn.addEventListener("click", onClickButton);
 
 	resize_dialog.addEventListener("animationend", function(e){e.target.classList.remove("dialog-box-flash");});
+
+	color_picker.addEventListener("change", colorChange);
 }
 
 function updateHTMLCells(grid) {
@@ -197,6 +202,10 @@ function onClickButton(event) {
 	}
 }
 
+function colorChange(e){
+	console.log("New color = " + e.target.value);
+
+}
 
 function onMouseEvent(eventtype, event) {
 	switch(eventtype){
