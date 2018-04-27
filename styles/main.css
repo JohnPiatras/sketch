@@ -167,7 +167,8 @@ h1 {
 	}
 
 	#controls{
-		width:100%;
+		width:95%;
+		margin-left:2.5%;
 	}
 
 	#controls .button{
@@ -177,7 +178,8 @@ h1 {
 	}
 
 	.grid-container{
-		width:100%;
+		width:95%;
+		margin-left:2.5%;
 	}
 
 	#resize-dialog{
@@ -206,7 +208,7 @@ h1 {
 @media only screen and (max-device-width: 1280px) and (orientation: landscape) {
 
 	.grid-container{
-		width:50%;
+		width:45%;
 	}
 
 	h1 {
