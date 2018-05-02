@@ -29,9 +29,18 @@ h1 {
 	display: none;
 }
 
+.etch-a-sketch-grid-width{
+	width:50%;
+}
+
+.color-grid-width{
+	width:60%;
+	margin-left:20%;
+	margin-bottom:1em;
+}
+
 .grid-container{
 	position:relative;
-	width:50%;
 	float:left;
 }
 
@@ -67,9 +76,23 @@ h1 {
 	transition:box-shadow 0s;
 }
 
+#colorPicker{
+	width:80%;
+	height:3em;
+	border:2px solid purple;
+	border-radius:5px;
+	padding:0;
+}
 
-.shaded {
-	background-color: grey;
+#color-grid{
+	display:grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+	position:absolute;	
+	width:100%;
+	height:100%;
+	border:2px solid purple;
+	border-radius:5px;
 }
 
 #controls{

@@ -22,7 +22,7 @@ updateHTMLCells(grid);	- updates html page cells elements
 */
 
 //stat of our namespace
-let etchasketch = function(){
+//let etchasketch = function(){
 "use strict"
 
 let mousedown = false;
@@ -41,6 +41,7 @@ let resize_cancel_bttn = document.getElementById("resize-cancel-bttn");
 let resize_ok_bttn = document.getElementById("resize-ok-bttn");
 let resize_size_input = document.getElementById("resize-size-input");
 
+let color_grid = document.getElementById("color-grid");
 let color_picker = document.getElementById("colorPicker");
 
 resetPage(16, 16);
@@ -48,10 +49,10 @@ resetPage(16, 16);
 function resetPage(grid_size_x, grid_size_y){
 	grid = new Grid(grid_size_x, grid_size_y);
 	game = new GameOfLife(grid);
-	initHTMLGrid(grid, "grid");
+	initPage(grid, "grid");
 }
 
-function initHTMLGrid(grid, id) {
+function initPage(grid, id) {
 	let w = grid.width;
 	let h = grid.height;
 	let gridElement = document.getElementById(id);
@@ -68,17 +69,16 @@ function initHTMLGrid(grid, id) {
 
 			//link our grid object and html div representing the cell
 			grid.cellAt(n, m).element = htmlcell;
-			htmlcell.gridCell = grid.cellAt(n, m);
-			
-			htmlcell.addEventListener("touchstart", onTouchStart);
-			htmlcell.addEventListener("touchmove", onTouchMove);
-			htmlcell.addEventListener("touchend", onTouchEnd);	
-		}	
-		gridElement.addEventListener("mousedown", function(e) {onMouseEvent("mousedown", e);});
-		gridElement.addEventListener("mouseup", function(e) {onMouseEvent("mouseup", e);});
-		gridElement.addEventListener("mouseover", function(e) {onMouseEvent("mouseover", e);});
-		
+			htmlcell.gridCell = grid.cellAt(n, m);	
+		}		
 	}
+	gridElement.addEventListener("touchstart", onTouchStart);
+	gridElement.addEventListener("touchmove", onTouchMove);
+	gridElement.addEventListener("touchend", onTouchEnd);	
+
+	gridElement.addEventListener("mousedown", function(e) {onMouseEvent("mousedown", e);});
+	gridElement.addEventListener("mouseup", function(e) {onMouseEvent("mouseup", e);});
+	gridElement.addEventListener("mouseover", function(e) {onMouseEvent("mouseover", e);});
 	
 	gridElement.classList.remove("hide");
 	start_bttn.addEventListener("click", onClickButton);
@@ -91,6 +91,35 @@ function initHTMLGrid(grid, id) {
 
 	color_picker.addEventListener("change", colorChange);
 	current_color = parseHexColor(color_picker.value);
+
+	initColorGrid();
+}
+
+//set up a color chooser grid with 9 random colors
+
+function getRandomColor(){
+	let c = "#";
+	for(let i = 0; i < 3; i++){
+		let n = Math.floor(Math.random() * 256);
+		let s = n.toString(16);
+		if(s.length == 1)s = '0' + s;
+		c = c + s;
+	}
+	return c;
+}
+
+function onClickColorGridCell(e){
+	color_picker.value = rgbToHex(e.target.style["background-color"]);
+	current_color = parseHexColor(color_picker.value);
+}
+
+function initColorGrid(){
+	for(let i = 0; i < 10;i++){
+		let e = document.createElement("div");
+		e.style["background-color"] = getRandomColor();
+		e.addEventListener('click', onClickColorGridCell);
+		color_grid.appendChild(e);
+	}
 }
 
 function colorCell(e, color){
@@ -218,12 +247,29 @@ function colorChange(e){
 	console.log("New color = " + current_color);
 }
 
+function parseRGBColor(rgb_string){
+	let str = rgb_string.slice(4, rgb_string.length-1);
+	let str_array = str.split(",");
+	return [Number(str_array[0]), Number(str_array[1]), Number(str_array[2])];
+}
+
 function parseHexColor(hex_string){
 	let hex_string_array = hex_string.split('');
 	let red = Number(`0x${hex_string_array[1]}${hex_string_array[2]}`);
 	let green = Number(`0x${hex_string_array[3]}${hex_string_array[4]}`);
 	let blue = Number(`0x${hex_string_array[5]}${hex_string_array[6]}`);
 	return [red, green, blue];
+}
+
+function rgbToHex(rgb_string){
+	let rgb = parseRGBColor(rgb_string);
+	let hex_string = "#";
+	for(let i = 0; i < 3; i++){
+		let s = rgb[i].toString(16);
+		if(s.length == 1)s = '0' + s;
+		hex_string = hex_string + s;
+	}
+	return hex_string;
 }
 
 function colorCellUnderMouse(x, y){
@@ -398,7 +444,7 @@ function GameOfLife(grid) {
 }
  
 
-}();//end of our namespace
+//}();//end of our namespace
  
  
  
