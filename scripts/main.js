@@ -29,7 +29,7 @@ let mousedown = false;
 let timer = false;
 let grid;
 let game;
-let color;
+let current_color = [100,100,100];
 
 //references to page elements
 let start_bttn = document.getElementById("start_bttn");
@@ -90,15 +90,22 @@ function initHTMLGrid(grid, id) {
 	resize_dialog.addEventListener("animationend", function(e){e.target.classList.remove("dialog-box-flash");});
 
 	color_picker.addEventListener("change", colorChange);
+	current_color = parseHexColor(color_picker.value);
+}
+
+function colorCell(e, color){
+	e.style['background-color'] = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+	e.gridCell.color = color;
 }
 
 function updateHTMLCells(grid) {
 	for(let i = 0; i < grid.cells.length;i++) {
 		let c = grid.cells[i];
 		if(c.state === 1){
-			c.element.classList.add("shaded");
+			//c.element.classList.add("shaded");
+			colorCell(c.element, c.color);
 		}else{
-			c.element.classList.remove("shaded");
+			colorCell(c.element, [255,255,255]);
 		}
 	}
 }
@@ -110,26 +117,33 @@ function updateHTMLCells(grid) {
  
 
 function onClickCell(event) {
-	this.classList.add("shaded");
+	//this.classList.add("shaded");
+	colorCell(this, currentColor);
 	this.gridCell.state = 1;
+	console.log('onClickCell');
 }
 
 function onTouchStart(event) {
-	this.classList.add("shaded");
+	//this.classList.add("shaded");
+	colorCell(this, currentColor);
 	this.gridCell.state = 1;
+	console.log('onTouchStart');
 }
 
 function onTouchMove(event) {
 	let c = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
 	if(c.classList.contains("cell")){
-		c.classList.add("shaded");
+		//c.classList.add("shaded");
+		colorCell(c, currentColor);
 		//c.setAttribute("style", "background-color:grey");
 		c.gridCell.state = 1;
+		console.log('onTouchMove');
 	}
 }
 
 function onTouchEnd(event) {
 	let d = document.getElementById("debugoutput");
+	console.log('onTouchEnd');
 }
 
 function doTick(){
@@ -156,7 +170,6 @@ function doStartButton(){
 	}
 }
 
-
 function showResizeDialog(){
 	clear_bttn.disabled = true;
 	resize_bttn.disabled = true;
@@ -171,8 +184,6 @@ function hideResizeDialog(){
 	start_bttn.disabled = false;
 	resize_dialog.classList.add("hide");
 }
-
-
 
 function onClickButton(event) {
 	switch(event.target.id){
@@ -203,14 +214,33 @@ function onClickButton(event) {
 }
 
 function colorChange(e){
-	console.log("New color = " + e.target.value);
+	current_color = parseHexColor(e.target.value);
+	console.log("New color = " + current_color);
+}
 
+function parseHexColor(hex_string){
+	let hex_string_array = hex_string.split('');
+	let red = Number(`0x${hex_string_array[1]}${hex_string_array[2]}`);
+	let green = Number(`0x${hex_string_array[3]}${hex_string_array[4]}`);
+	let blue = Number(`0x${hex_string_array[5]}${hex_string_array[6]}`);
+	return [red, green, blue];
+}
+
+function colorCellUnderMouse(x, y){
+	let c = document.elementFromPoint(x, y);
+	if(c.classList.contains("cell")){
+		//c.classList.add("shaded");
+		colorCell(c, current_color);
+		c.gridCell.state = 1;
+	}
 }
 
 function onMouseEvent(eventtype, event) {
+	console.log('onMouseEvent');
 	switch(eventtype){
 		case "mousedown":
 			mousedown = true;
+			colorCellUnderMouse(event.clientX, event.clientY);
 			break;
 			
 		case "mouseup":
@@ -218,11 +248,7 @@ function onMouseEvent(eventtype, event) {
 			break;
 		case "mouseover":
 			if(mousedown){
-				let c = document.elementFromPoint(event.clientX, event.clientY);
-				if(c.classList.contains("cell")){
-					c.classList.add("shaded");
-					c.gridCell.state = 1;
-				}	
+				colorCellUnderMouse(event.clientX, event.clientY);
 			}
 			break;
 		default:
@@ -323,6 +349,7 @@ function GameOfLife(grid) {
 	for(let c of this.grid.cells){
 		c.state = 0;
 		c.newState = 0;
+		c.color = [255,255,255];
 	}
 	
 	this.doTick = function(){
@@ -332,8 +359,14 @@ function GameOfLife(grid) {
 		
 			//count live neighbours
 			let live = 0;
+			let color_sum = [0,0,0];
 			for(let neighbour of cell_neighbours){
 				live += neighbour.state;
+				if(neighbour.state === 1){
+					color_sum[0] += neighbour.color[0];
+					color_sum[1] += neighbour.color[1];
+					color_sum[2] += neighbour.color[2];
+				}
 			}
 			
 			if(cell.state === 1){
@@ -344,13 +377,16 @@ function GameOfLife(grid) {
 						break;
 					case 2:
 					case 3:
-						cell.newState = 1;	//Ah ah ah stayin' alive, stayin' alive
+						cell.newState = 1;
 						break;
 					default:
 						cell.newState = 0;
 				}
 			}else{
 				if(live === 3)cell.newState = 1;
+				cell.color[0] = color_sum[0] / live;
+				cell.color[1] = color_sum[1] / live;
+				cell.color[2] = color_sum[2] / live;
 			}			
 		}
 		
