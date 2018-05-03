@@ -1,12 +1,18 @@
 # Etch-A-Sketch
 
-Initially written for fun - an etch a sketch which also plays Conway's Game of Life.
+## Description
+A simple etch-a-sketch like page written for a project on the Odin Project. 
 
-I am now using this as the basis for my Odin Project Etch-A-Sketch mini project.
+## Usage
 
+Select a color from the randomly generated color grid and then click on the grid to color it in. 
 
-Currently only supports one color (grey).
+You can pick other colors by clicking the colored button underneath the color grid.
 
-You can press the start button and it will play Conway's Game of Life with whatever you've sketched.
+Press clear to clear the grid and resize to resize the grid.
 
+As an added twist pressing the start button will play Conway's Game of Life on your sketch.
+
+## Author
+John P Burns
 
