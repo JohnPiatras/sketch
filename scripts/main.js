@@ -32,24 +32,24 @@ let game;
 let current_color = [100,100,100];
 
 //references to page elements
-let start_bttn = document.getElementById("start_bttn");
-let clear_bttn = document.getElementById("clear_bttn");
+let start_bttn = document.getElementById("start-bttn");
+let clear_bttn = document.getElementById("clear-bttn");
 
 let resize_dialog = document.getElementById("resize-dialog");
-let resize_bttn = document.getElementById("resize_bttn");
+let resize_bttn = document.getElementById("resize-bttn");
 let resize_cancel_bttn = document.getElementById("resize-cancel-bttn");
 let resize_ok_bttn = document.getElementById("resize-ok-bttn");
 let resize_size_input = document.getElementById("resize-size-input");
 
 let color_grid = document.getElementById("color-grid");
-let color_picker = document.getElementById("colorPicker");
+let color_picker = document.getElementById("color-picker");
 
 resetPage(16, 16);
 
 function resetPage(grid_size_x, grid_size_y){
 	grid = new Grid(grid_size_x, grid_size_y);
 	game = new GameOfLife(grid);
-	initPage(grid, "grid");
+	initPage(grid, "etch-grid");
 }
 
 function initPage(grid, id) {
@@ -64,7 +64,7 @@ function initPage(grid, id) {
 		for (var m = 0; m < h; m++) {
 			//create html div for cell
 			var htmlcell = document.createElement("div");
-			htmlcell.setAttribute("class", "cell grid-border-style");
+			htmlcell.setAttribute("class", "cell -grid-border-style");
 			gridElement.appendChild(htmlcell);
 
 			//link our grid object and html div representing the cell
@@ -216,14 +216,14 @@ function hideResizeDialog(){
 
 function onClickButton(event) {
 	switch(event.target.id){
-		case "clear_bttn":
+		case "clear-bttn":
 			stopGameOfLife();
 			resetPage(grid.width, grid.height);
 			break;
-		case "resize_bttn":
+		case "resize-bttn":
 			showResizeDialog();
 			break;
-		case "start_bttn":
+		case "start-bttn":
 			doStartButton();
 			break;
 		case "resize-cancel-bttn":
