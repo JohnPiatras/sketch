@@ -8,6 +8,11 @@
 </head>
 <body>
 	<div id="top"></div>
+	
+	<div class="square-container etch-grid-container">
+		<div id="etch-grid" class="grid-border-style"></div>
+	</div>
+	
 	<div id="controls">
 	
 		<h1>Etch-a-Sketch</h1>
@@ -19,12 +24,13 @@
 			<div id="color-grid">	
 			</div>
 		</div>
-		<input type="color" id="color-picker" class="">
+
+		<div class="square-container color-picker-container">
+			<input type="color" id="color-picker" class="">
+		</div>
 	</div>
 	
-	<div class="square-container etch-grid-container">
-		<div id="etch-grid" class="grid-border-style"></div>
-	</div>
+	
 
 	<div id="resize-dialog" class="dialog-box hide">
 		<h1>Enter new grid size</h1>
