@@ -72,9 +72,10 @@ function initPage(grid, id) {
 			htmlcell.gridCell = grid.cellAt(n, m);	
 		}		
 	}
-	gridElement.addEventListener("touchstart", onTouchStart);
-	gridElement.addEventListener("touchmove", onTouchMove);
-	gridElement.addEventListener("touchend", onTouchEnd);	
+
+	gridElement.addEventListener("touchstart", function(e) {onTouchEvent("touchstart", e);});
+	gridElement.addEventListener("touchmove", function(e) {onTouchEvent("touchmove", e);});
+	gridElement.addEventListener("touchend", function(e) {onTouchEvent("touchend", e);});
 
 	gridElement.addEventListener("mousedown", function(e) {onMouseEvent("mousedown", e);});
 	gridElement.addEventListener("mouseup", function(e) {onMouseEvent("mouseup", e);});
@@ -147,32 +148,25 @@ function updateHTMLCells(grid) {
 
 function onClickCell(event) {
 	//this.classList.add("shaded");
-	colorCell(this, currentColor);
+	colorCell(this, current_color);
 	this.gridCell.state = 1;
 	console.log('onClickCell');
 }
 
-function onTouchStart(event) {
-	//this.classList.add("shaded");
-	colorCell(this, currentColor);
-	this.gridCell.state = 1;
-	console.log('onTouchStart');
-}
-
-function onTouchMove(event) {
-	let c = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
-	if(c.classList.contains("cell")){
-		//c.classList.add("shaded");
-		colorCell(c, currentColor);
-		//c.setAttribute("style", "background-color:grey");
-		c.gridCell.state = 1;
-		console.log('onTouchMove');
+function onTouchEvent(eventtype, event){
+	switch(eventtype){
+		case "touchstart":
+			colorCellUnderMouse(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+			break;
+			
+		case "touchmove":
+			colorCellUnderMouse(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+			break;
+		case "touchend":
+			break;
+		default:
 	}
-}
 
-function onTouchEnd(event) {
-	let d = document.getElementById("debugoutput");
-	console.log('onTouchEnd');
 }
 
 function doTick(){
