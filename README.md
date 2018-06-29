@@ -2,7 +2,7 @@
 
 ## Description
 A simple etch-a-sketch like page written for a project on the Odin Project. 
-You can view it [[https://johnpiatras.github.io/sketch|here]].
+You can view it [here](https://johnpiatras.github.io/sketch).
 
 ## Usage
 
